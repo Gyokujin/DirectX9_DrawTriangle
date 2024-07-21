@@ -1,7 +1,8 @@
+/*
 #include "DrawTriangle.h"
 
 // 윈도우 프로시저 함수
-LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
@@ -40,6 +41,13 @@ HRESULT InitD3D(HWND hWnd)
         return E_FAIL;
     }
 
+    return S_OK;
+}
+
+// 정점 버퍼 생성
+HRESULT InitVB()
+{
+    // 삼각형을 렌더링하기위해 세개의 정점을 선언
     CUSTOMVERTEX vertices[]
     {
         { 100.0f, 100.0f, 1.0f, 1.0f, D3DCOLOR_XRGB(255, 0, 0), },
@@ -101,41 +109,49 @@ VOID Render()
 }
 
 // 애플리케이션 진입점
-INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, INT nCmdShow)
+INT WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, INT)
 {
     // 윈도우 클래스 등록
-    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WindowProc, 0, 0, hInstance, NULL, LoadCursor(NULL, IDC_ARROW), (HBRUSH)(COLOR_WINDOW + 1), NULL, "D3D Tutorial", NULL };
+    WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, MsgProc, 0L, 0L,
+        GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
+        "D3D Tutorial", NULL };
     RegisterClassEx(&wc);
 
-    // 윈도우 생성
-    HWND hWnd = CreateWindow("D3D Tutorial", "D3D Tutorial 02: Vertices", WS_OVERLAPPEDWINDOW, 100, 100, 800, 600, NULL, NULL, hInstance, NULL);
-
-    if (!hWnd)
-        return 0;
-
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
+    // #1. 윈도우 생성
+    HWND hWnd = CreateWindow("D3D Tutorial", "D3D Tutorial 02: Vertices",
+        WS_OVERLAPPEDWINDOW, 100, 100, 300, 300,
+        GetDesktopWindow(), NULL, wc.hInstance, NULL);
 
     // Direct3D 초기화
-    if (FAILED(InitD3D(hWnd)))
-        return 0;
-
-    // 메인 루프
-    MSG msg;
-    ZeroMemory(&msg, sizeof(msg));
-
-    while (msg.message != WM_QUIT)
+    if (SUCCEEDED(InitD3D(hWnd)))
     {
-        if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) // 메시지큐에 메시지가 있으면 메시지 처리
+        // 정점버퍼 초기화
+        if (SUCCEEDED(InitVB()))
         {
-            TranslateMessage(&msg); // 키보드 입력 메시지를 문자 메시지로 변환한다.
-            DispatchMessage(&msg); // 메시지를 해당 윈도우 프로시저로 전달하여 처리한다.
+            // #5. 윈도우 출력2. 윈도우의 화면에 보이도록 한다.
+            ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+            // #4. 윈도우 출력1. Paint 콜백 함수를 요청한다.
+            UpdateWindow(hWnd);
+
+            // #6. 메시지 루프
+            MSG msg;
+            ZeroMemory(&msg, sizeof(msg));
+
+            while (msg.message != WM_QUIT)
+            {
+                if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) // 메시지큐에 메시지가 있으면 메시지 처리
+                {
+                    TranslateMessage(&msg); // 키보드 입력 메시지를 문자 메시지로 변환한다.
+                    DispatchMessage(&msg); // 메시지를 해당 윈도우 프로시저로 전달하여 처리한다.
+                }
+                else // #7. 처리할 메시지가 없으면 Render()함수 호출
+                    Render();
+            }
         }
-        else // #7. 처리할 메시지가 없으면 Render()함수 호출
-            Render();
     }
 
-    Cleanup();
     UnregisterClass("D3D Tutorial", wc.hInstance); // 등록된 클래스 소거
     return 0;
 }
+*/

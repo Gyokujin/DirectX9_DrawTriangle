@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Backup.cpp" />
     <ClCompile Include="DrawTriangle.cpp" />
     <ClCompile Include="Sample.cpp" />
   </ItemGroup>
