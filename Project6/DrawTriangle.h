@@ -23,9 +23,6 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // 초기화 함수
 HRESULT InitD3D(HWND hWnd);
 
-// 정점 버퍼 생성
-HRESULT InitVB();
-
 // 정리 함수
 VOID Cleanup();
 
